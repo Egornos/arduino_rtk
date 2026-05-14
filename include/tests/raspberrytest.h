@@ -35,14 +35,57 @@ unsigned long lastPrint = 0;
 const double DT = 0.02;
 const double PRINT_DT = 0.1;
 
+
+
+// Глобальные переменные
+float targetLeft = 0.0;
+float targetRight = 0.0;
+bool newData = false;
+String serialBuffer = "";
+
+void parseSerialData() {
+    while (Serial.available()) {
+        char c = Serial.read();
+        
+        if (c == '\n') {
+            // Конец строки - парсим
+            if (serialBuffer.length() > 0) {
+                int commaIndex = serialBuffer.indexOf(',');
+                if (commaIndex > 0) {
+                    String leftStr = serialBuffer.substring(0, commaIndex);
+                    String rightStr = serialBuffer.substring(commaIndex + 1);
+                    
+                    targetLeft = leftStr.toFloat();
+                    targetRight = rightStr.toFloat();
+                    
+                    // Ограничиваем значения
+                    targetLeft = constrain(targetLeft, -1.0, 1.0);
+                    targetRight = constrain(targetRight, -1.0, 1.0);
+                    
+                    newData = true;
+                }
+                serialBuffer = "";
+            }
+        } 
+        else if (c != '\r') { // Игнорируем carriage return
+            serialBuffer += c;
+            // Защита от переполнения буфера
+            if (serialBuffer.length() > 20) {
+                serialBuffer = "";
+            }
+        }
+    }
+}
+
+
 void loop() {
     unsigned long now = millis();
-    
+    parseSerialData();
     // Запускаем обновление одометрии и запускаем моторы, не чаще чем раз в DT секунд
     if (now - lastUpdate >= DT * 1000) {
         lastUpdate = now;
         robot.update(); // Обновление информации
-        robot.setMotors(0.0 /*Левый*/, 0.0 /*Правый*/); // Подача напряжений на моторы, от -1 до 1
+        robot.setMotors(targetLeft /*Левый*/, targetRight /*Правый*/); // Подача напряжений на моторы, от -1 до 1
     }
     
     // Делаем вывод одометрии не чаще чем PRINT_DT секунд
@@ -51,9 +94,9 @@ void loop() {
         double x, y, theta;
         robot.getPosition(x, y, theta);
         Serial.print(x);
-        Serial.print(" ");
+        Serial.print(",");
         Serial.print(y);
-        Serial.print(" ");
+        Serial.print(",");
         Serial.println(theta);
     }
 }
