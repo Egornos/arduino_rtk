@@ -5,9 +5,11 @@ float targetRight = 0.0;
 bool sweepers_is_active = false;
 
 int readBuffer(String &buffer) {
-    int counter = 0;
     int commaIndex = buffer.indexOf(',');
-    if(buffer.length() == 0) return -1;
+    if(buffer.length() == 0) {
+        Serial.println(buffer);
+        return -1;
+    }
     if(commaIndex == -1) {
         sweepers_is_active = buffer.toInt();
         return 0;
@@ -30,10 +32,11 @@ void readSerialData() {
     while(Serial.available()) {
         char c = Serial.read();
         if(c == '\n') {
+            Serial.println(buffer);
             if(readBuffer(buffer) == -1) Serial.print("Error input data.");
             buffer = "";
         }
-        else if(c != '\r') {
+        else if(c != '\r'){
             buffer += c;
             if(buffer.length() >= 30) buffer = "";
         }
