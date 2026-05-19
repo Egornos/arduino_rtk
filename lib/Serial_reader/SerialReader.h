@@ -6,10 +6,7 @@ bool sweepers_is_active = false;
 
 int readBuffer(String &buffer) {
     int commaIndex = buffer.indexOf(',');
-    if(buffer.length() == 0) {
-        Serial.println(buffer);
-        return -1;
-    }
+    if(buffer.length() == 0) return -1;
     if(commaIndex == -1) {
         sweepers_is_active = buffer.toInt();
         return 0;
@@ -26,13 +23,13 @@ int readBuffer(String &buffer) {
 
     return -1;
 }
+String buffer = "";
 
 void readSerialData() {
-    String buffer = "";
+
     while(Serial.available()) {
         char c = Serial.read();
         if(c == '\n') {
-            Serial.println(buffer);
             if(readBuffer(buffer) == -1) Serial.print("Error input data.");
             buffer = "";
         }
