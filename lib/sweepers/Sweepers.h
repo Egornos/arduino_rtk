@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-class sweepers
+class Sweepers
 {
 private:
     float T = 10;
@@ -10,8 +10,8 @@ private:
     unsigned long lastTime;
     int pwm = 0;
 public:
-    sweepers(unsigned int pinLeft, unsigned int pinRight);
-    ~sweepers();
+    Sweepers(unsigned int pinLeft, unsigned int pinRight);
+    ~Sweepers();
 
     void start_stop(bool is_active);
     void update();
