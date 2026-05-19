@@ -21,6 +21,7 @@ void Robot::update() {
     rightWheel->update();
     odometry->update(leftWheel->getLinearVelocity(), rightWheel->getLinearVelocity());
     odometry->getOdometry(x, y, theta);
+    sweepers->update();
 }
 
 void Robot::reset() {
@@ -60,3 +61,7 @@ unsigned int Robot::getLeftPinA() {return leftPinA;}
 unsigned int Robot::getLeftPinB() {return leftPinB;}
 unsigned int Robot::getRightPinA() {return rightPinA;}
 unsigned int Robot::getRightPinB() {return rightPinB;}
+
+void Robot::sweepersActivate(bool is_active) {
+    sweepers->start_stop(is_active);
+}

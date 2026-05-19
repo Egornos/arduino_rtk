@@ -3,6 +3,7 @@
 #include "Wheel.h"
 #include "Odometry.h"
 #include "config.h"
+#include "Sweepers.h"
 
 /*
 Главный класс, собирающий весь конструктор в единое целое.
@@ -19,6 +20,7 @@ private:
     Wheel *leftWheel;
     Wheel *rightWheel;
     Odometry *odometry;
+    Sweepers *sweepers;
 public:
     Robot();
     ~Robot();
@@ -33,6 +35,7 @@ public:
     void reset(); // Сбрасывает во всех функциях.
     void getPosition(double &x, double &y, double &theta); // Передаёт инфу о местоположенни из одометрии.
     void setMotors(float leftControl, float RightControl); // Задаёт управление моторов.
+    void sweepersActivate(bool is_active);
 
     // Возращают пины энкодеров.
     unsigned int getLeftPinA();
