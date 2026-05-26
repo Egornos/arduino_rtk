@@ -19,6 +19,8 @@ void setup() {
     Serial.begin(115200);
     robot.reset();
     
+    robot.sweepersBegin();
+    
     // Это триггеры, запускают функцию, при появлении напряжения на пине
     attachInterrupt(digitalPinToInterrupt(robot.getLeftPinA()), // Указываем пин, который будем проверять
         updateLWA, // Указываем вызываемую функцию

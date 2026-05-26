@@ -1,10 +1,13 @@
 #include "Robot.h"
 
-Robot::Robot() {
+Robot::Robot() 
+{
     this->leftWheel = new Wheel(WHEEL_RADIUS, 4, ENC_MOTOR4_PINA, ENC_MOTOR4_PINB);
     this->rightWheel = new Wheel(WHEEL_RADIUS, 3, ENC_MOTOR3_PINA, ENC_MOTOR3_PINB);
     this->odometry = new Odometry(ROBOT_BASE);
-    this->sweepers = new Sweepers(SERVO1, SERVO2);
+    this->sweeperLeft = new Sweepers(SERVO1, 500, 2400);
+    this->sweeperRight = new Sweepers(SERVO1, 500, 2400);
+
     leftPinA = ENC_MOTOR4_PINA;
     leftPinB = ENC_MOTOR4_PINB;
     rightPinA = ENC_MOTOR3_PINA;
@@ -22,7 +25,8 @@ void Robot::update() {
     rightWheel->update();
     odometry->update(leftWheel->getLinearVelocity(), rightWheel->getLinearVelocity());
     odometry->getOdometry(x, y, theta);
-    sweepers->update();
+    sweeperLeft->update();
+    sweeperRight->update();
 }
 
 void Robot::reset() {
@@ -69,5 +73,12 @@ unsigned int Robot::getRightPinA() {return rightPinA;}
 unsigned int Robot::getRightPinB() {return rightPinB;}
 
 void Robot::sweepersActivate(bool is_active) {
-    sweepers->start_stop(is_active);
+    sweeperLeft->start_stop(is_active);
+    sweeperRight->start_stop(is_active);
+}
+
+void Robot::sweepersBegin()
+{
+    sweeperLeft->begin();
+    sweeperRight->begin();
 }

@@ -20,7 +20,10 @@ private:
     Wheel *leftWheel;
     Wheel *rightWheel;
     Odometry *odometry;
-    Sweepers *sweepers;
+
+    Sweepers *sweeperLeft;
+    Sweepers *sweeperRight;
+
 public:
     Robot();
     ~Robot();
@@ -30,6 +33,8 @@ public:
     void left_triggerB();
     void right_triggerA();
     void right_triggerB();
+
+    void sweepersBegin();
 
     void update(); // Обновляет все одноимённые функции в объектах.
     void reset(); // Сбрасывает во всех функциях.

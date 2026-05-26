@@ -1,1 +1,1 @@
-#include "tests/raspberrytest.h"
+#include "tests/fulltest.h"
