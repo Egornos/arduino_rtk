@@ -1,68 +1,69 @@
 #include "Sweepers.h"
 
-
-Sweepers::Sweepers(unsigned int pinLeft, unsigned int pinRight)
- : pinLeft(pinLeft), pinRight(pinRight) 
-{
-    lastTime = micros();
-    servoLeft.attach(pinLeft);
-    servoRight.attach(pinRight);
-    servoLeft.write(0); // сразу в "выкл" позицию
-    servoRight.write(0);
-    lastStepTime = millis(); 
-}
-Sweepers::~Sweepers() 
-{   // Отключаем серво при удалении объекта (на всякий)
-    servoLeft.detach();
-    servoRight.detach();
+// Конструктор теперь принимает один пин
+Sweepers::Sweepers(unsigned int pin, int minUs, int maxUs)
+: pin(pin), minPulseUs(minUs), maxPulseUs(maxUs)
+{    
+    currentAngle = ANGLE_MIN;
+    direction = 1;
+    lastStepTime = millis();
+    is_active = false;
 }
 
-void Sweepers::start_stop(bool is_active) 
-{
-    this->is_active = is_active;
-    if (!is_active) 
-    {
-    //    servoLeft.write(180);
-    //    servoRight.write(180);
-    //} else {
-    //    servoLeft.write(0);
-    //    servoRight.write(0);
-    //}
-
-        // При выключении сразу возвращаем в 0
-        servoLeft.write(0);
-        servoRight.write(0);
-        currentAngle = 0;
-        direction = 1;
+void Sweepers::begin() {
+    if (!is_attached) {
+        servo.attach(pin, minPulseUs, maxPulseUs);
+        // Сразу после подключения ставим в 0, чтобы не было рывка
+        servo.write(ANGLE_MIN);
+        delay(500); // Даем серве 0.5 сек спокойно встать в ноль перед стартом программы
+        is_attached = true;
+        lastStepTime = millis();
     }
 }
 
-void Sweepers::update() {
-    //unsigned long now = micros();
-    //if(now - lastTime >= T) {
-       // lastTime = now;
-       // pwm = (pwm + increment) % 101;
-    //}
-    if (!is_active) return; // Если выключено - ничего не делаем
-    
+Sweepers::~Sweepers()
+{   
+    if (is_attached) {
+        servo.detach();
+    }
+}
+
+void Sweepers::start_stop(bool isActive)
+{
+    this->is_active = isActive;
+    if (!isActive)
+    {
+        servo.write(ANGLE_MIN);
+        currentAngle = ANGLE_MIN;
+        direction = 1;
+    }
+    else
+    {
+        lastStepTime = millis();
+    }
+}
+
+void Sweepers::update()
+{
+    if (!is_active || !is_attached) return;
+
     unsigned long now = millis();
-    // Проверяем, прошло ли время для следующего шага
-    if (now - lastStepTime >= STEP_DELAY_MS) {
+    if (now - lastStepTime >= STEP_DELAY_MS)
+    {
         lastStepTime = now;
         
-        // Меняем угол
-        currentAngle += direction;
-        
-        // Если достигли края - меняем направление
-        if (currentAngle >= ANGLE_MAX) {
+        int nextAngle = currentAngle + direction;
+
+        if (nextAngle >= ANGLE_MAX) {
             currentAngle = ANGLE_MAX;
-            direction = -1;
-        } else if (currentAngle <= ANGLE_MIN) {
+            direction = -1; 
+        } else if (nextAngle <= ANGLE_MIN) {
             currentAngle = ANGLE_MIN;
-            direction = 1;
+            direction = 1; 
+        } else {
+            currentAngle = nextAngle;
         }
 
-        servoLeft.write(currentAngle);
-        servoRight.write(currentAngle);
-    }   
+        servo.write(currentAngle);
+    }
 }
