@@ -45,6 +45,11 @@ void Robot::setMotors(float leftControl, float rightControl) {
     rightWheel->setMotorControl(rightControl);
 }
 
+void Robot::setMotorSpeeds(float leftSpeed, float rightSpeed) {
+    leftWheel->setWheelLinearVelocity(leftSpeed);
+    rightWheel->setWheelLinearVelocity(rightSpeed);
+}
+
 void Robot::left_triggerA() {
     leftWheel->triggerA();
 }

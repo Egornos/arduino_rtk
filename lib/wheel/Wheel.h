@@ -2,6 +2,7 @@
 
 #include "Motor.h"
 #include "Encoder.h"
+#include "PID.h"
 
 /*
 Класс объединяющий (реализующий) классы Encoder и Motor.
@@ -13,12 +14,15 @@ class Wheel
 {
 private:
     float radius; //мм
+
     Motor *motor;
     Encoder *encoder;
+    PID *pid;
 
     double currentAngle;
     double currentAngularVelocity;
     double currentLinearVelocity;
+    float desiredLinearVelocity;
     unsigned long lastTime;
 public:
     // Конструктор принимает данные для построения объектов реализуемых классов и радиус колеса в мм.
@@ -34,6 +38,7 @@ public:
     /* В этой функции расчитываются скорости колеса.
     Для этого считается разница во времени, поэтому эту функцию надо запускать постоянно. */
     void update();
+    void setWheelLinearVelocity(float desiredAngularVelocity);
 
     // Реализация необходимых в дальнейшем функций из прошлых классов.
     void setMotorControl(float control);

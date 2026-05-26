@@ -35,6 +35,7 @@ public:
     void reset(); // Сбрасывает во всех функциях.
     void getPosition(double &x, double &y, double &theta); // Передаёт инфу о местоположенни из одометрии.
     void setMotors(float leftControl, float RightControl); // Задаёт управление моторов.
+    void setMotorSpeeds(float leftSpeed, float rightSpeed);
     void sweepersActivate(bool is_active);
 
     // Возращают пины энкодеров.

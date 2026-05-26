@@ -11,15 +11,21 @@ Wheel::Wheel(
     this->radius = radius;
     this->motor = new Motor(number, pwm_moving_threshold);
     this->encoder = new Encoder(pinA, pinB, isClockwise);
+    this->pid = new PID(0.05, 0, 0);
+    pid->setOutputLimits(-1, 1);
+    pid->setMaxIntegralValue(0.2);
+
     currentAngle = 0;
     currentAngularVelocity = 0;
     currentLinearVelocity = 0;
     lastTime = micros();
+    desiredLinearVelocity = 0;
 }
 
 Wheel::~Wheel() {
     delete motor;
     delete encoder;
+    delete pid;
 }
 
 void Wheel::update() {
@@ -38,9 +44,17 @@ void Wheel::update() {
 
     currentAngle = nowAngle;
     lastTime = now;
+    pid->update(desiredLinearVelocity, currentLinearVelocity);
+    float pid_output = pid->output;
+    motor->setMotorControl(pid_output);
+}
+
+void Wheel::setWheelLinearVelocity(float desiredAngularVelocity) {
+    this->desiredLinearVelocity = desiredAngularVelocity;
 }
 
 void Wheel::setMotorControl(float control) {
+    desiredLinearVelocity = currentLinearVelocity;
     motor->setMotorControl(control);
 }
 void Wheel::triggerA() {
