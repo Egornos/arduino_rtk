@@ -15,7 +15,7 @@ private:
 
     const int ANGLE_MIN = 0;
     const int ANGLE_MAX = 180;
-    const unsigned long STEP_DELAY_MS = 20; 
+    const unsigned long STEP_DELAY_MS = 3; 
     unsigned long lastStepTime = 0;
 
     int minPulseUs; 
