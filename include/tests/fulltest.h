@@ -45,7 +45,7 @@ void loop() {
     if (now - lastUpdate >= DT * 1000) {
         lastUpdate = now;
         robot.update(); // Обновление информации
-        robot.setMotors(targetLeft /*Левый*/, targetRight /*Правый*/); // Подача напряжений на моторы, от -1 до 1
+        robot.setMotorSpeeds(targetLeft /*Левый*/, targetRight /*Правый*/); // Подача напряжений на моторы, от -1 до 1
         robot.sweepersActivate(sweepers_is_active);
     }
     
