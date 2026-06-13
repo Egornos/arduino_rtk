@@ -11,7 +11,7 @@ Wheel::Wheel(
     this->radius = radius;
     this->motor = new Motor(number, pwm_moving_threshold);
     this->encoder = new Encoder(pinA, pinB, isClockwise);
-    this->pid = new PID(6, 3, 0);
+    this->pid = new PID(10, 15, 0);
     pid->setOutputLimits(-1, 1);
     pid->setMaxIntegralValue(0.2);
 

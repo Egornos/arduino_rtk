@@ -6,7 +6,7 @@ Robot::Robot()
     this->rightWheel = new Wheel(WHEEL_RADIUS, 3, ENC_MOTOR3_PINA, ENC_MOTOR3_PINB);
     this->odometry = new Odometry(ROBOT_BASE);
     this->sweeperLeft = new Sweepers(SERVO1, 500, 2400);
-    this->sweeperRight = new Sweepers(SERVO1, 500, 2400);
+    this->sweeperRight = new Sweepers(SERVO2, 500, 2400);
 
     leftPinA = ENC_MOTOR4_PINA;
     leftPinB = ENC_MOTOR4_PINB;
