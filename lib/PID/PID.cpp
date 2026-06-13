@@ -1,12 +1,13 @@
 // PID.cpp
 #include "PID.h"
 
-PID::PID(float kP, float kI, float kD, float dt)
-    : kP(kP), kI(kI), kD(kD), dt(dt)
+PID::PID(float kP, float kI, float kD)
+    : kP(kP), kI(kI), kD(kD)
 {
     maxIntegralValue = -1;
     minOutput = -1;
     maxOutput = -1;
+    lastt = micros();
     reset();
 }
 
@@ -14,6 +15,10 @@ void PID::update(float desiredValue, float currentValue) {
     lastlastError = lastError;
     lastError = currentError;
     currentError = desiredValue - currentValue;
+    float dt = (micros() - lastt) / 1000000.0;
+    lastt = micros();
+
+    if(dt > 0.1) return;
 
     // Интегральная составляющая с защитой от переполнения
     integralValue += currentError * dt;
@@ -55,6 +60,7 @@ void PID::reset() {
     dError = 0.0;
     unclippedOutput = 0.0;
     output = 0.0;
+    lastt = micros();
 }
 
 void PID::setOutputLimits(float min, float max) {

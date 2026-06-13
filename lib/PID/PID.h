@@ -10,8 +10,8 @@ private:
     float kP = 1.0;
     float kI = 0.0;
     float kD = 0.0;
-    float dt;
     float maxIntegralValue;
+    float lastt;
 
     float integralValue;
     float lastError;
@@ -27,10 +27,10 @@ private:
 public:
     float output;
 
-    PID(float kP, float kD = 0.0, float kI = 0.0, float dt = 0.05);
+    PID(float kP, float kI = 0.0, float kD = 0.0);
     void update(float desiredValue, float currentValue);
     void reset();
     void setOutputLimits(float min, float max);
     void setMaxIntegralValue(float imaxIntegralValue);
-    void setPidParams(float ikP, float ikD = -1.0, float ikI = -1.0);
+    void setPidParams(float ikP, float ikI = -1.0, float ikD = -1.0);
 };
